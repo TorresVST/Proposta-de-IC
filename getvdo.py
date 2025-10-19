@@ -1,25 +1,25 @@
-from pytube import YouTube
+from pytubefix import YouTube
+from pytubefix.cli import on_progress  
 import os
 
 def download_video(url, output_path='C:/Users/rafae/Desktop/UTFPR/Extensão/IC/Esportes Python'):
     try:
-        # Create a YouTube object
-        yt = YouTube(url)
+        yt = YouTube(url, on_progress_callback=on_progress)
 
-        video = yt.streams.get_highest_resolution()
+        video = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
 
         if output_path == 'C:/Users/rafae/Desktop/UTFPR/Extensão/IC/Esportes Python':
             output_path = os.getcwd()
 
     
-        print(f"Downloading: {yt.title}")
+        print(f"Baixando: {yt.title}")
         video.download(output_path)
-        print("Download completed!")
+        print("Download concluído!")
 
     except Exception as e:
-        print(f"An error occurred: {str(e)}")
+        print(f"Ocorreu um erro: {str(e)}")
 
-# Example usage
+# Exemplo de uso
 if __name__ == "__main__":
-    video_url = input("Enter the YouTube video URL: ")
+    video_url = input("Digite a URL do vídeo do YouTube: ")
     download_video(video_url)
