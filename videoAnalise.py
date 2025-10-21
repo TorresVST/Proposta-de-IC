@@ -1,6 +1,11 @@
 import cv2
+from ultralytics import YOLO
 
-cap = cv2.VideoCapture("C:/Users/rafae/Desktop/UTFPR/Extensão/IC/Esportes Python/Proposta-de-IC/Passes cortados/24-1.mp4")
+model = YOLO('yolov8s.pt')
+
+BALL_CLASS_ID = 32
+
+cap = cv2.VideoCapture("C:/Users/rafae/Desktop/UTFPR/Extensão/IC/Esportes Python/Proposta-de-IC/Passes cortados/5.mp4")
 if not cap.isOpened():
     print("Erro ao abrir o vídeo."); exit()
 
@@ -11,6 +16,30 @@ while True:
     ret, frame = cap.read()
     if not ret:
         break
+
+    results = model.track(
+        frame,
+        persist=True,
+        classes=[BALL_CLASS_ID],
+    )
+
+    if results[0].boxes is not None and results[0].boxes.id is not None:
+        boxes = results[0].boxes.xyxy.cpu().numpy().astype(int)
+        track_ids = results[0].boxes.id.cpu().numpy().astype(int)
+
+        for box, track_id in zip(boxes, track_ids):
+            x1, y1, x2, y2 = box
+            cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 255), 2)
+            label = f'ID: {track_id}'
+            cv2.putText(
+                frame, 
+                label, 
+                (x1, y1 - 10), 
+                cv2.FONT_HERSHEY_SIMPLEX, 
+                0.7, 
+                (0, 0, 255), 
+                2
+            )
 
     resized = cv2.resize(frame, (0, 0), fx=scale, fy=scale, interpolation=cv2.INTER_AREA)
     cv2.imshow("Video", resized)
