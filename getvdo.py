@@ -8,7 +8,7 @@ def download_video(url, output_path='C:/Users/rafae/Desktop/UTFPR/Extensão/IC/E
 
         video = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
 
-        if output_path == 'C:/Users/rafae/Desktop/UTFPR/Extensão/IC/Esportes Python':
+        if output_path == 'C:/Users/rafae/Desktop/UTFPR/Extensão/IC/Esportes Python/Proposta-de-IC/Material Bruto':
             output_path = os.getcwd()
 
     
