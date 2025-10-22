@@ -1,11 +1,11 @@
 import cv2
 from ultralytics import YOLO
 
-model = YOLO('yolov8s.pt')
+model = YOLO('yolov8x.pt')
 
 BALL_CLASS_ID = 32
 
-cap = cv2.VideoCapture("C:/Users/rafae/Desktop/UTFPR/Extensão/IC/Esportes Python/Proposta-de-IC/Passes cortados/5.mp4")
+cap = cv2.VideoCapture("C:/Users/rafae/Desktop/UTFPR/Extensão/IC/Esportes Python/Proposta-de-IC/Passes cortados/17.mp4")
 if not cap.isOpened():
     print("Erro ao abrir o vídeo."); exit()
 
@@ -21,6 +21,8 @@ while True:
         frame,
         persist=True,
         classes=[BALL_CLASS_ID],
+        conf=0.1,  
+        iou=0.5    
     )
 
     if results[0].boxes is not None and results[0].boxes.id is not None:
